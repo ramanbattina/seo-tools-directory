@@ -1,10 +1,22 @@
 import { NextResponse } from 'next/server'
 import { kv } from '@vercel/kv'
 
+type Tool = {
+  name: string;
+  description: string;
+  link: string;
+  category: string;
+}
+
+type CategoryTools = {
+  category: string;
+  tools: Tool[];
+}
+
 export async function GET() {
   try {
     const categories = ['Keyword Research', 'On-Page SEO', 'Link Building', 'Technical SEO', 'Local SEO']
-    const tools = []
+    const tools: CategoryTools[] = []
 
     for (const category of categories) {
       const toolKeys = await kv.smembers(`category:${category}`)
@@ -12,7 +24,7 @@ export async function GET() {
 
       const categoryTools = await Promise.all(toolKeys.map(async key => {
         try {
-          const tool = await kv.get(key)
+          const tool = await kv.get(key) as Tool | null
           console.log(`Tool for key ${key}:`, tool)
           return tool
         } catch (error) {
@@ -21,7 +33,7 @@ export async function GET() {
         }
       }))
 
-      tools.push({ category, tools: categoryTools.filter(Boolean) })
+      tools.push({ category, tools: categoryTools.filter((tool): tool is Tool => tool !== null) })
     }
 
     console.log('All tools:', JSON.stringify(tools, null, 2))

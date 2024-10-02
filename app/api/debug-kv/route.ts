@@ -1,10 +1,17 @@
 import { NextResponse } from 'next/server'
 import { kv } from '@vercel/kv'
 
+type DebugData = {
+  [category: string]: {
+    keys: string[];
+    tools: any[];
+  }
+}
+
 export async function GET() {
   try {
     const categories = ['Keyword Research', 'On-Page SEO', 'Link Building', 'Technical SEO', 'Local SEO']
-    const debug = {}
+    const debug: DebugData = {}
 
     for (const category of categories) {
       const keys = await kv.smembers(`category:${category}`)
