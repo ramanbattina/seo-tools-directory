@@ -55,6 +55,12 @@ export default function SEODirectory() {
     )
   )
 
+  const fetchAndLogTools = async () => {
+    const response = await fetch('/api/get-tools');
+    const data = await response.json();
+    console.log('Directly fetched tools:', JSON.stringify(data, null, 2));
+  };
+
   return (
     <div>
       <div className="mb-4 flex gap-4">
@@ -106,6 +112,7 @@ export default function SEODirectory() {
           </Card>
         ))}
       </div>
+      <button onClick={fetchAndLogTools}>Fetch and Log Tools</button>
     </div>
   )
 }
