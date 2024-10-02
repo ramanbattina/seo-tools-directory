@@ -21,6 +21,7 @@ export async function GET() {
       }
     }
 
+    console.log('Debug data:', JSON.stringify(debug, null, 2))
     return NextResponse.json(debug)
   } catch (error) {
     console.error('Error debugging KV:', error)

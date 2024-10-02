@@ -14,6 +14,8 @@ export async function POST(request: Request) {
     // Create a unique key for the tool
     const toolKey = `tool:${Date.now()}:${name.toLowerCase().replace(/\s+/g, '-')}`
 
+    console.log('Storing tool with key:', toolKey)
+
     // Store the tool in Vercel KV
     await kv.set(toolKey, { name, description, link, category })
 
