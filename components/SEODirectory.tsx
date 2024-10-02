@@ -49,17 +49,11 @@ export default function SEODirectory() {
   }, [])
 
   const filteredTools = tools.flatMap(category => 
-    category.tools.filter(tool => 
+    (category.tools || []).filter(tool => 
       tool && tool.name && tool.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (selectedCategory === 'All' || category.category === selectedCategory)
     )
   )
-
-  const fetchAndLogTools = async () => {
-    const response = await fetch('/api/get-tools');
-    const data = await response.json();
-    console.log('Directly fetched tools:', JSON.stringify(data, null, 2));
-  };
 
   return (
     <div>
@@ -87,32 +81,31 @@ export default function SEODirectory() {
       {!isLoading && !error && (
         <>
           <p>Total categories: {tools.length}</p>
-          <p>Total tools: {tools.reduce((sum, category) => sum + category.tools.length, 0)}</p>
+          <p>Total tools: {tools.reduce((sum, category) => sum + (category.tools ? category.tools.length : 0), 0)}</p>
           {filteredTools.length === 0 && <p>No tools found.</p>}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredTools.map(tool => (
+              <Card key={tool.name}>
+                <CardHeader>
+                  <CardTitle>
+                    <Link href={`/tools/${tool.name.toLowerCase().replace(/\s+/g, '-')}`} className="hover:underline">
+                      {tool.name}
+                    </Link>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>{tool.description}</CardDescription>
+                  <div className="mt-4 flex justify-end">
+                    <a href={tool.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                      Visit Tool
+                    </a>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredTools.map(tool => (
-          <Card key={tool.name}>
-            <CardHeader>
-              <CardTitle>
-                <Link href={`/tools/${tool.name.toLowerCase().replace(/\s+/g, '-')}`} className="hover:underline">
-                  {tool.name}
-                </Link>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription>{tool.description}</CardDescription>
-              <div className="mt-4 flex justify-end">
-                <a href={tool.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                  Visit Tool
-                </a>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      <button onClick={fetchAndLogTools}>Fetch and Log Tools</button>
     </div>
   )
 }
