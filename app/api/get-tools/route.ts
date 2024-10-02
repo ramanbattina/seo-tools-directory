@@ -28,6 +28,9 @@ export async function GET() {
         try {
           const tool = await kv.get(key) as Tool | null
           console.log(`Tool for key ${key}:`, tool)
+          if (tool && !tool.slug) {
+            tool.slug = tool.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+          }
           return tool
         } catch (error) {
           console.error(`Error fetching tool for key ${key}:`, error)
