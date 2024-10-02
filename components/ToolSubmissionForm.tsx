@@ -10,17 +10,41 @@ export default function ToolSubmissionForm() {
   const [description, setDescription] = useState('')
   const [link, setLink] = useState('')
   const [category, setCategory] = useState<CategoryType>('Keyword Research')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [message, setMessage] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Here you would typically send this data to your backend
-    console.log({ name, description, link, category })
-    // Reset form
-    setName('')
-    setDescription('')
-    setLink('')
-    setCategory('Keyword Research')
-    alert('Tool submitted successfully!')
+    setIsSubmitting(true)
+    setMessage('')
+
+    try {
+      const response = await fetch('/api/submit-tool', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, description, link, category }),
+      })
+
+      const data = await response.json()
+      console.log('Submission response:', data)
+
+      if (response.ok) {
+        setMessage('Tool submitted successfully!')
+        setName('')
+        setDescription('')
+        setLink('')
+        setCategory('Keyword Research')
+      } else {
+        setMessage(`Error: ${data.error}`)
+      }
+    } catch (error) {
+      console.error('Error submitting tool:', error)
+      setMessage('An error occurred while submitting the tool.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
