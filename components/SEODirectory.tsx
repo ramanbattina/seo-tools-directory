@@ -24,12 +24,28 @@ export default function SEODirectory() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | 'All'>('All')
   const [tools, setTools] = useState<Category[]>([])
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    setIsLoading(true);
     fetch('/api/get-tools')
-      .then(response => response.json())
-      .then(data => setTools(data))
-      .catch(error => console.error('Error fetching tools:', error))
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch tools');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Fetched tools:', data);
+        setTools(data);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching tools:', error);
+        setError(error.message);
+        setIsLoading(false);
+      })
   }, [])
 
   const filteredTools = tools.flatMap(category => 
@@ -60,6 +76,9 @@ export default function SEODirectory() {
           ))}
         </select>
       </div>
+      {isLoading && <p>Loading tools...</p>}
+      {error && <p>Error: {error}</p>}
+      {!isLoading && !error && filteredTools.length === 0 && <p>No tools found.</p>}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredTools.map(tool => (
           <Card key={tool.name}>

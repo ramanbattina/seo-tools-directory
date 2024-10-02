@@ -8,10 +8,12 @@ export async function GET() {
 
     for (const category of categories) {
       const toolKeys = await kv.smembers(`category:${category}`)
+      console.log(`Tools for ${category}:`, toolKeys);
       const categoryTools = await Promise.all(toolKeys.map(key => kv.get(key)))
       tools.push({ category, tools: categoryTools })
     }
 
+    console.log('All tools:', tools);
     return NextResponse.json(tools)
   } catch (error) {
     console.error('Error fetching tools:', error)
