@@ -6,10 +6,24 @@ import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { CategoryType } from '@/lib/seoTools'
 
+// Define the shape of a tool
+interface Tool {
+  name: string;
+  description: string;
+  link: string;
+  category: CategoryType;
+}
+
+// Define the shape of a category
+interface Category {
+  category: CategoryType;
+  tools: Tool[];
+}
+
 export default function SEODirectory() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | 'All'>('All')
-  const [tools, setTools] = useState([])
+  const [tools, setTools] = useState<Category[]>([])
 
   useEffect(() => {
     fetch('/api/get-tools')
@@ -41,7 +55,7 @@ export default function SEODirectory() {
           className="p-2 border rounded"
         >
           <option value="All">All Categories</option>
-          {seoTools.map(category => (
+          {tools.map(category => (
             <option key={category.category} value={category.category}>{category.category}</option>
           ))}
         </select>
