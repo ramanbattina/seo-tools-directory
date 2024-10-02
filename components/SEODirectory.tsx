@@ -55,6 +55,16 @@ export default function SEODirectory() {
     )
   )
 
+  const debugTools = async () => {
+    try {
+      const response = await fetch('/api/debug-kv')
+      const data = await response.json()
+      console.log('Debug KV data:', JSON.stringify(data, null, 2))
+    } catch (error) {
+      console.error('Error debugging KV:', error)
+    }
+  }
+
   return (
     <div>
       <div className="mb-4 flex gap-4">
@@ -104,6 +114,7 @@ export default function SEODirectory() {
               </Card>
             ))}
           </div>
+          <button onClick={debugTools} className="mt-4 p-2 bg-gray-200 rounded">Debug KV</button>
         </>
       )}
     </div>
