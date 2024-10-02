@@ -64,6 +64,9 @@ export default function SEODirectory() {
                 <ul className="space-y-2">
                   {category.tools.map((tool) => (
                     <li key={tool.name}>
+                      <Link href={`/tools/${tool.name.toLowerCase().replace(/\s+/g, '-')}`} className="text-blue-500 hover:underline">
+                        {tool.name}
+                      </Link>
                       <Link href={tool.link} target="_blank" rel="noopener noreferrer" className="block hover:bg-muted p-2 rounded transition-colors">
                         <CardTitle className="text-base">{tool.name}</CardTitle>
                         <CardDescription>{tool.description}</CardDescription>
