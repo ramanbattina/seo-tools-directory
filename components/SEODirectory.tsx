@@ -6,15 +6,14 @@ import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { CategoryType } from '@/lib/seoTools'
 
-// Define the shape of a tool
 interface Tool {
   name: string;
   description: string;
   link: string;
-  category: CategoryType;
+  category: string;
+  slug: string;
 }
 
-// Define the shape of a category
 interface Category {
   category: CategoryType;
   tools: Tool[];
@@ -119,35 +118,31 @@ export default function SEODirectory() {
       {isLoading && <p>Loading tools...</p>}
       {error && <p>Error: {error}</p>}
       {!isLoading && !error && (
-        <>
-          <p>Total categories: {tools.length}</p>
-          <p>Total tools: {tools.reduce((sum, category) => sum + (category.tools ? category.tools.length : 0), 0)}</p>
-          {filteredTools.length === 0 && <p>No tools found.</p>}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredTools.map(tool => (
-              <Card key={tool.name}>
-                <CardHeader>
-                  <CardTitle>
-                    <Link href={`/tools/${tool.name.toLowerCase().replace(/\s+/g, '-')}`} className="hover:underline">
-                      {tool.name}
-                    </Link>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>{tool.description}</CardDescription>
-                  <div className="mt-4 flex justify-end">
-                    <a href={tool.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                      Visit Tool
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          <button onClick={debugTools} className="mt-4 p-2 bg-gray-200 rounded">Debug KV</button>
-          <button onClick={fetchTools} className="mt-4 p-2 bg-blue-500 text-white rounded">Refresh Tools</button>
-        </>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+          {filteredTools.map(tool => (
+            <Card key={tool.slug}>
+              <CardHeader>
+                <CardTitle>
+                  <Link href={`/tools/${tool.slug}`} className="hover:underline">
+                    {tool.name}
+                  </Link>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>{tool.description}</CardDescription>
+                <div className="mt-4 flex justify-between items-center">
+                  <span className="text-sm text-gray-500">{tool.category}</span>
+                  <a href={tool.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                    Visit Tool
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       )}
+      <button onClick={debugTools} className="mt-4 p-2 bg-gray-200 rounded">Debug KV</button>
+      <button onClick={fetchTools} className="mt-4 p-2 bg-blue-500 text-white rounded">Refresh Tools</button>
     </div>
   )
 }

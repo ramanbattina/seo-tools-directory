@@ -6,27 +6,25 @@ interface Tool {
   description: string;
   link: string;
   category: string;
+  slug: string;
 }
 
 export default async function ToolPage({ params }: { params: { slug: string } }) {
-  const tools = await kv.smembers('category:Keyword Research')
-  const tool = await Promise.all(tools.map(async (key) => {
-    const data = await kv.get(key) as Tool | null
-    if (data && typeof data === 'object' && 'name' in data && data.name.toLowerCase().replace(/\s+/g, '-') === params.slug) {
-      return data
-    }
-    return null
-  })).then(results => results.find(Boolean) as Tool | undefined)
+  const toolKey = `tool:${params.slug}`
+  const tool = await kv.get(toolKey) as Tool | null
 
   if (!tool) {
     notFound()
   }
 
   return (
-    <div>
-      <h1>{tool.name}</h1>
-      <p>{tool.description}</p>
-      <a href={tool.link} target="_blank" rel="noopener noreferrer">Visit Tool</a>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-4">{tool.name}</h1>
+      <p className="mb-4">{tool.description}</p>
+      <p className="mb-4">Category: {tool.category}</p>
+      <a href={tool.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+        Visit Tool
+      </a>
     </div>
   )
 }

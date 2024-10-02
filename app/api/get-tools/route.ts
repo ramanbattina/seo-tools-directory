@@ -6,6 +6,7 @@ interface Tool {
   description: string;
   link: string;
   category: string;
+  slug: string;
 }
 
 type CategoryTools = {

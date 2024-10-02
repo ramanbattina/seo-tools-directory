@@ -6,21 +6,17 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { name, description, link, category } = body
 
-    console.log('Received tool submission:', { name, description, link, category })
-
     // Validate the input
     if (!name || !description || !link || !category) {
-      console.log('Missing required fields')
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
     // Create a unique key for the tool
-    const toolKey = `tool:${Date.now()}:${name.toLowerCase().replace(/\s+/g, '-')}`
-
-    console.log('Storing tool with key:', toolKey)
+    const slug = name.toLowerCase().replace(/\s+/g, '-')
+    const toolKey = `tool:${slug}`
 
     // Store the tool in Vercel KV
-    await kv.set(toolKey, { name, description, link, category })
+    await kv.set(toolKey, { name, description, link, category, slug })
 
     // Add the tool key to the category list
     await kv.sadd(`category:${category}`, toolKey)
