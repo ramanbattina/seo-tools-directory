@@ -37,7 +37,7 @@ export default function SEODirectory() {
         return response.json();
       })
       .then(data => {
-        console.log('Fetched tools:', JSON.stringify(data, null, 2));
+        console.log('Fetched tools in SEODirectory:', JSON.stringify(data, null, 2));
         setTools(data);
         setIsLoading(false);
       })
@@ -63,6 +63,27 @@ export default function SEODirectory() {
     } catch (error) {
       console.error('Error debugging KV:', error)
     }
+  }
+
+  const refreshTools = () => {
+    setIsLoading(true)
+    fetch('/api/get-tools')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch tools')
+        }
+        return response.json()
+      })
+      .then(data => {
+        console.log('Refreshed tools:', JSON.stringify(data, null, 2))
+        setTools(data)
+        setIsLoading(false)
+      })
+      .catch(error => {
+        console.error('Error refreshing tools:', error)
+        setError(error.message)
+        setIsLoading(false)
+      })
   }
 
   return (
@@ -115,6 +136,7 @@ export default function SEODirectory() {
             ))}
           </div>
           <button onClick={debugTools} className="mt-4 p-2 bg-gray-200 rounded">Debug KV</button>
+          <button onClick={refreshTools} className="mt-4 p-2 bg-blue-500 text-white rounded">Refresh Tools</button>
         </>
       )}
     </div>

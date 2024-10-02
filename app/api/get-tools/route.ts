@@ -19,6 +19,7 @@ export async function GET() {
     const tools: CategoryTools[] = []
 
     for (const category of categories) {
+      console.log(`Fetching tools for category: ${category}`)
       const toolKeys = await kv.smembers(`category:${category}`)
       console.log(`Keys for ${category}:`, toolKeys)
 
