@@ -11,8 +11,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // Create a unique key for the tool
-    const slug = name.toLowerCase().replace(/\s+/g, '-')
+    // Create a unique slug for the tool
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
     const toolKey = `tool:${slug}`
 
     // Store the tool in Vercel KV
