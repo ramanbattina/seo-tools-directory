@@ -67,7 +67,7 @@ export default function SEODirectory() {
 
   const refreshTools = () => {
     setIsLoading(true)
-    fetch('/api/get-tools')
+    fetch('/api/get-tools', { cache: 'no-store' })
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to fetch tools')
@@ -85,6 +85,10 @@ export default function SEODirectory() {
         setIsLoading(false)
       })
   }
+
+  useEffect(() => {
+    refreshTools()
+  }, [])
 
   return (
     <div>

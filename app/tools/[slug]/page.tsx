@@ -1,27 +1,25 @@
-import { seoTools } from '@/lib/seoTools'
+import { kv } from '@vercel/kv'
 import { notFound } from 'next/navigation'
 
-export default function ToolPage({ params }: { params: { slug: string } }) {
-  const tool = seoTools.flatMap(category => category.tools).find(tool => tool.name.toLowerCase().replace(/\s+/g, '-') === params.slug)
+export default async function ToolPage({ params }: { params: { slug: string } }) {
+  const tools = await kv.smembers('category:Keyword Research')
+  const tool = await Promise.all(tools.map(async (key) => {
+    const data = await kv.get(key)
+    if (data && data.name.toLowerCase().replace(/\s+/g, '-') === params.slug) {
+      return data
+    }
+    return null
+  })).then(results => results.find(Boolean))
 
   if (!tool) {
     notFound()
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-4">{tool.name}</h1>
-      <p className="mb-4">{tool.description}</p>
-      <a href={tool.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-        Visit Tool
-      </a>
+    <div>
+      <h1>{tool.name}</h1>
+      <p>{tool.description}</p>
+      <a href={tool.link} target="_blank" rel="noopener noreferrer">Visit Tool</a>
     </div>
   )
-}
-
-export async function generateStaticParams() {
-  const tools = seoTools.flatMap(category => category.tools)
-  return tools.map(tool => ({
-    slug: tool.name.toLowerCase().replace(/\s+/g, '-'),
-  }))
 }

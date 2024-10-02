@@ -38,7 +38,11 @@ export async function GET() {
     }
 
     console.log('All tools:', JSON.stringify(tools, null, 2))
-    return NextResponse.json(tools)
+    
+    // Add cache control headers
+    const response = NextResponse.json(tools)
+    response.headers.set('Cache-Control', 'no-store, max-age=0')
+    return response
   } catch (error) {
     console.error('Error fetching tools:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

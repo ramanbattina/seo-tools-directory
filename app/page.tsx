@@ -1,15 +1,21 @@
-import SEODirectory from '@/components/SEODirectory'
+'use client'
 
-export const metadata = {
-  title: 'SEO Tools and Resources Directory',
-  description: 'A comprehensive directory of SEO tools and resources for digital marketers, website owners, and SEO professionals.',
-}
+import SEODirectory from '@/components/SEODirectory'
+import ToolSubmissionForm from '@/components/ToolSubmissionForm'
+import { useState } from 'react'
 
 export default function Home() {
+  const [refreshKey, setRefreshKey] = useState(0)
+
+  const handleSubmitSuccess = () => {
+    setRefreshKey(prevKey => prevKey + 1)
+  }
+
   return (
-    <main className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">SEO Tools and Resources Directory</h1>
-      <SEODirectory />
+    <main className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-4">SEO Tools Directory</h1>
+      <SEODirectory key={refreshKey} />
+      <ToolSubmissionForm onSubmitSuccess={handleSubmitSuccess} />
     </main>
   )
 }

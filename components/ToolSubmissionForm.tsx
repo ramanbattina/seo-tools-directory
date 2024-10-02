@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { CategoryType } from '@/lib/seoTools'
 
-export default function ToolSubmissionForm() {
+export default function ToolSubmissionForm({ onSubmitSuccess }: { onSubmitSuccess: () => void }) {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [link, setLink] = useState('')
@@ -36,6 +36,7 @@ export default function ToolSubmissionForm() {
         setDescription('')
         setLink('')
         setCategory('Keyword Research')
+        onSubmitSuccess() // Call this function to refresh tools
       } else {
         setMessage(`Error: ${data.error}`)
       }
