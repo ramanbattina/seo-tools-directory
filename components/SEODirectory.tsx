@@ -27,26 +27,30 @@ export default function SEODirectory() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const fetchTools = async () => {
     setIsLoading(true);
-    fetch('/api/get-tools')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch tools');
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Fetched tools in SEODirectory:', JSON.stringify(data, null, 2));
-        setTools(data);
-        setIsLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching tools:', error);
-        setError(error.message);
-        setIsLoading(false);
-      })
-  }, [])
+    try {
+      const response = await fetch('/api/get-tools', { 
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache' }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch tools');
+      }
+      const data = await response.json();
+      console.log('Fetched tools:', JSON.stringify(data, null, 2));
+      setTools(data);
+    } catch (error) {
+      console.error('Error fetching tools:', error);
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTools();
+  }, []);
 
   const filteredTools = tools.flatMap(category => 
     (category.tools || []).filter(tool => 
@@ -140,7 +144,7 @@ export default function SEODirectory() {
             ))}
           </div>
           <button onClick={debugTools} className="mt-4 p-2 bg-gray-200 rounded">Debug KV</button>
-          <button onClick={refreshTools} className="mt-4 p-2 bg-blue-500 text-white rounded">Refresh Tools</button>
+          <button onClick={fetchTools} className="mt-4 p-2 bg-blue-500 text-white rounded">Refresh Tools</button>
         </>
       )}
     </div>

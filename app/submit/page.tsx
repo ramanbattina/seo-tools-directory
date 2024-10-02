@@ -7,13 +7,8 @@ export default function SubmitPage() {
   const router = useRouter()
 
   const handleSubmitSuccess = () => {
-    // Optionally, you can add a delay before redirecting
-    // setTimeout(() => {
-    //   router.push('/')
-    // }, 2000)
-
-    // Or redirect immediately
     router.push('/')
+    router.refresh() // This will refresh the page data
   }
 
   return (
