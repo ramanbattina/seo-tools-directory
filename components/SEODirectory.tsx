@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Search, BarChart, Globe, Link as LinkIcon, FileText, Zap } from "lucide-react"
 import Link from "next/link"
 import { seoTools, CategoryType } from '@/lib/seoTools'
 
