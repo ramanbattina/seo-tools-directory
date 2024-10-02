@@ -5,7 +5,11 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { CategoryType } from '@/lib/seoTools'
 
-export default function ToolSubmissionForm({ onSubmitSuccess }: { onSubmitSuccess: () => void }) {
+interface ToolSubmissionFormProps {
+  onSubmitSuccess: () => void
+}
+
+export default function ToolSubmissionForm({ onSubmitSuccess }: ToolSubmissionFormProps) {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [link, setLink] = useState('')
