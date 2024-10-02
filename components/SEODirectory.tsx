@@ -40,9 +40,10 @@ export default function SEODirectory() {
       const data = await response.json();
       console.log('Fetched tools:', JSON.stringify(data, null, 2));
       setTools(data);
+      setError(null); // Clear any previous errors
     } catch (error) {
       console.error('Error fetching tools:', error);
-      setError(error.message);
+      setError(error instanceof Error ? error.message : 'An unknown error occurred');
     } finally {
       setIsLoading(false);
     }
