@@ -20,11 +20,17 @@ export async function POST(request: Request) {
     // Add the tool key to the category list
     await kv.sadd(`category:${category}`, toolKey)
 
-    // Log the stored tool and category
-    console.log('Tool stored:', await kv.get(toolKey))
-    console.log('Category members:', await kv.smembers(`category:${category}`))
+    // Log and return the stored data
+    const storedTool = await kv.get(toolKey)
+    const categoryTools = await kv.smembers(`category:${category}`)
+    console.log('Stored tool:', storedTool)
+    console.log('Category tools:', categoryTools)
 
-    return NextResponse.json({ message: 'Tool added successfully' }, { status: 200 })
+    return NextResponse.json({ 
+      message: 'Tool added successfully',
+      storedTool,
+      categoryTools
+    }, { status: 200 })
   } catch (error) {
     console.error('Error adding tool:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

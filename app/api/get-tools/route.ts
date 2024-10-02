@@ -11,9 +11,14 @@ export async function GET() {
       console.log(`Keys for ${category}:`, toolKeys)
 
       const categoryTools = await Promise.all(toolKeys.map(async key => {
-        const tool = await kv.get(key)
-        console.log(`Tool for key ${key}:`, tool)
-        return tool
+        try {
+          const tool = await kv.get(key)
+          console.log(`Tool for key ${key}:`, tool)
+          return tool
+        } catch (error) {
+          console.error(`Error fetching tool for key ${key}:`, error)
+          return null
+        }
       }))
 
       tools.push({ category, tools: categoryTools.filter(Boolean) })
