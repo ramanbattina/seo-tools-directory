@@ -73,7 +73,7 @@ export default function SEODirectory() {
                   ))}
                 </ul>
               ) : (
-                <p className="text-muted-foreground">No tools found in this category.</p>
+                <p className="text-muted-foreground">No tools found in this category .Try next time</p>
               )}
             </CardContent>
           </Card>
