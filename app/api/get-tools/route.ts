@@ -8,16 +8,18 @@ export async function GET() {
 
     for (const category of categories) {
       const toolKeys = await kv.smembers(`category:${category}`)
-      console.log(`Tools for ${category}:`, toolKeys);
+      console.log(`Keys for ${category}:`, toolKeys)
+
       const categoryTools = await Promise.all(toolKeys.map(async key => {
         const tool = await kv.get(key)
-        console.log(`Tool for key ${key}:`, tool);
-        return tool;
+        console.log(`Tool for key ${key}:`, tool)
+        return tool
       }))
+
       tools.push({ category, tools: categoryTools.filter(Boolean) })
     }
 
-    console.log('All tools:', JSON.stringify(tools, null, 2));
+    console.log('All tools:', JSON.stringify(tools, null, 2))
     return NextResponse.json(tools)
   } catch (error) {
     console.error('Error fetching tools:', error)

@@ -20,7 +20,9 @@ export async function POST(request: Request) {
     // Add the tool key to the category list
     await kv.sadd(`category:${category}`, toolKey)
 
-    console.log('Tool submitted:', { name, description, link, category });
+    // Log the stored tool and category
+    console.log('Tool stored:', await kv.get(toolKey))
+    console.log('Category members:', await kv.smembers(`category:${category}`))
 
     return NextResponse.json({ message: 'Tool added successfully' }, { status: 200 })
   } catch (error) {
