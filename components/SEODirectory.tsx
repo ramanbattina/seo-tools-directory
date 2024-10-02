@@ -37,7 +37,7 @@ export default function SEODirectory() {
         return response.json();
       })
       .then(data => {
-        console.log('Fetched tools:', data);
+        console.log('Fetched tools:', JSON.stringify(data, null, 2));
         setTools(data);
         setIsLoading(false);
       })
@@ -50,7 +50,7 @@ export default function SEODirectory() {
 
   const filteredTools = tools.flatMap(category => 
     category.tools.filter(tool => 
-      tool.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      tool && tool.name && tool.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (selectedCategory === 'All' || category.category === selectedCategory)
     )
   )
@@ -78,7 +78,13 @@ export default function SEODirectory() {
       </div>
       {isLoading && <p>Loading tools...</p>}
       {error && <p>Error: {error}</p>}
-      {!isLoading && !error && filteredTools.length === 0 && <p>No tools found.</p>}
+      {!isLoading && !error && (
+        <>
+          <p>Total categories: {tools.length}</p>
+          <p>Total tools: {tools.reduce((sum, category) => sum + category.tools.length, 0)}</p>
+          {filteredTools.length === 0 && <p>No tools found.</p>}
+        </>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredTools.map(tool => (
           <Card key={tool.name}>
