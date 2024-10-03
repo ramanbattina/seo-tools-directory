@@ -22,7 +22,7 @@ export default function SEODirectory({ initialTools }: SEODirectoryProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | 'All'>('All')
   const [tools, setTools] = useState<Category[]>(initialTools)
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchTools = async () => {

@@ -1,6 +1,6 @@
 import { Search, BarChart, Globe, Link as LinkIcon, FileText, Zap } from "lucide-react"
 
-export type CategoryType = 'Keyword Research' | 'Analytics' | 'On-Page SEO' | 'Backlink Analysis' | 'Technical SEO' | 'Local SEO'
+export type CategoryType = 'Keyword Research' | 'Analytics' | 'On-Page SEO' | 'Link Building' | 'Technical SEO' | 'Local SEO'
 
 export interface Tool {
   name: string;
