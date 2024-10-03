@@ -19,10 +19,14 @@ interface Category {
   tools: Tool[];
 }
 
-export default function SEODirectory() {
+interface SEODirectoryProps {
+  initialTools: Category[];
+}
+
+export default function SEODirectory({ initialTools }: SEODirectoryProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | 'All'>('All')
-  const [tools, setTools] = useState<Category[]>([])
+  const [tools, setTools] = useState<Category[]>(initialTools)
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,7 +35,11 @@ export default function SEODirectory() {
     try {
       const response = await fetch('/api/get-tools', { 
         cache: 'no-store',
-        headers: { 'Cache-Control': 'no-cache' }
+        headers: { 
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
       });
       if (!response.ok) {
         throw new Error('Failed to fetch tools');
@@ -50,6 +58,13 @@ export default function SEODirectory() {
 
   useEffect(() => {
     fetchTools();
+
+    const handleRefresh = () => fetchTools();
+    window.addEventListener('refreshTools', handleRefresh);
+
+    return () => {
+      window.removeEventListener('refreshTools', handleRefresh);
+    };
   }, []);
 
   const filteredTools = tools.flatMap(category => 

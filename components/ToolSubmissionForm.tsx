@@ -41,6 +41,9 @@ export default function ToolSubmissionForm({ onSubmitSuccess }: ToolSubmissionFo
         setLink('')
         setCategory('Keyword Research')
         onSubmitSuccess() // Call this function to refresh tools
+
+        // Add this line to trigger a refresh of the tools data
+        window.dispatchEvent(new CustomEvent('refreshTools'));
       } else {
         setMessage(`Error: ${data.error}`)
       }
