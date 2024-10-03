@@ -1,23 +1,11 @@
 import { NextResponse } from 'next/server'
 import { kv } from '@vercel/kv'
-
-interface Tool {
-  name: string;
-  description: string;
-  link: string;
-  category: string;
-  slug: string;
-}
-
-type CategoryTools = {
-  category: string;
-  tools: Tool[];
-}
+import { CategoryType, Tool, Category } from '@/lib/seoTools'
 
 export async function GET() {
   try {
-    const categories = ['Keyword Research', 'On-Page SEO', 'Link Building', 'Technical SEO', 'Local SEO']
-    const tools: CategoryTools[] = []
+    const categories: CategoryType[] = ['Keyword Research', 'On-Page SEO', 'Link Building', 'Technical SEO', 'Local SEO']
+    const tools: Category[] = []
 
     for (const category of categories) {
       console.log(`Fetching tools for category: ${category}`)
@@ -30,6 +18,7 @@ export async function GET() {
           console.log(`Tool for key ${key}:`, tool)
           if (tool && !tool.slug) {
             tool.slug = tool.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+            await kv.set(key, tool)  // Update the tool with the new slug
           }
           return tool
         } catch (error) {
@@ -43,7 +32,6 @@ export async function GET() {
 
     console.log('All tools:', JSON.stringify(tools, null, 2))
     
-    // Add cache control headers
     const response = NextResponse.json(tools)
     response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
     response.headers.set('Pragma', 'no-cache')

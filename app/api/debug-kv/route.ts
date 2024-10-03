@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { kv } from '@vercel/kv'
+import { CategoryType } from '@/lib/seoTools'
 
 type DebugData = {
   [category: string]: {
@@ -10,7 +11,7 @@ type DebugData = {
 
 export async function GET() {
   try {
-    const categories = ['Keyword Research', 'On-Page SEO', 'Link Building', 'Technical SEO', 'Local SEO']
+    const categories: CategoryType[] = ['Keyword Research', 'On-Page SEO', 'Link Building', 'Technical SEO', 'Local SEO']
     const debug: DebugData = {}
 
     for (const category of categories) {
