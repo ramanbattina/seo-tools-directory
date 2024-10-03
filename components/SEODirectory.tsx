@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { CategoryType, Category } from '@/lib/seoTools'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
-import { CategoryType } from '@/lib/seoTools'
 
 interface Tool {
   name: string;
@@ -12,11 +12,6 @@ interface Tool {
   link: string;
   category: string;
   slug: string;
-}
-
-interface Category {
-  category: CategoryType;
-  tools: Tool[];
 }
 
 interface SEODirectoryProps {

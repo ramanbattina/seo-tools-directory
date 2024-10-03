@@ -1,16 +1,17 @@
 import SEODirectory from '@/components/SEODirectory'
 import Link from 'next/link'
 import { kv } from '@vercel/kv'
+import { CategoryType, Tool, Category } from '@/lib/seoTools'
 
 export const revalidate = 0 // This ensures the page is not cached
 
-async function getTools() {
-  const categories = ['Keyword Research', 'On-Page SEO', 'Link Building', 'Technical SEO', 'Local SEO']
-  const tools = []
+async function getTools(): Promise<Category[]> {
+  const categories: CategoryType[] = ['Keyword Research', 'On-Page SEO', 'Link Building', 'Technical SEO', 'Local SEO']
+  const tools: Category[] = []
 
   for (const category of categories) {
     const toolKeys = await kv.smembers(`category:${category}`)
-    const categoryTools = await Promise.all(toolKeys.map(key => kv.get(key)))
+    const categoryTools = await Promise.all(toolKeys.map(key => kv.get(key))) as Tool[]
     tools.push({ category, tools: categoryTools.filter(Boolean) })
   }
 

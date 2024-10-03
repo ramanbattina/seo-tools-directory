@@ -2,6 +2,19 @@ import { Search, BarChart, Globe, Link as LinkIcon, FileText, Zap } from "lucide
 
 export type CategoryType = 'Keyword Research' | 'Analytics' | 'On-Page SEO' | 'Backlink Analysis' | 'Technical SEO' | 'Local SEO'
 
+export interface Tool {
+  name: string;
+  description: string;
+  link: string;
+  category: CategoryType;
+  slug: string;
+}
+
+export interface Category {
+  category: CategoryType;
+  tools: Tool[];
+}
+
 export const seoTools = [
   {
     category: 'Keyword Research' as CategoryType,
